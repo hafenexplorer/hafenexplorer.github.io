@@ -21,7 +21,7 @@ echo.
 
 REM Check Java
 echo [1/5] Checking Java...
-"C:\Program Files\Java\jdk-21\bin\javaw.exe" -version 2>&1 | findstr /i "version"
+Java -version 2>&1 | findstr /i "version"
 if errorlevel 1 (
     echo.
     echo ERROR: Java not found
@@ -115,7 +115,7 @@ echo.
 echo ========================================
 echo.
 
-"C:\Program Files\Java\jdk-21\bin\javaw.exe" -jar launcher.jar "%CONFIG_URL%"
+Java -jar launcher.jar "%CONFIG_URL%"
 set EXIT_CODE=%errorlevel%
 
 echo.
@@ -132,4 +132,5 @@ echo.
 echo Press any key to close...
 pause >nul
 exit /b %EXIT_CODE%
+
 
