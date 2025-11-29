@@ -1,0 +1,8 @@
+validate always
+
+title "Hurricane"
+icon "https://hafenexplorer.github.io/icon.gif"
+splash-image "https://hafenexplorer.github.io/splash.gif"
+
+validate always
+include https://hafenexplorer.github.io/hafen.hl

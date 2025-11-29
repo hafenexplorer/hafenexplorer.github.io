@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hurricane Client - Haven & Hearth Custom Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 3em;
+            color: #4ecca3;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #a8dadc;
+            margin-bottom: 30px;
+        }
+        
+        .download-section {
+            background: #1e2a3a;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #4ecca3 0%, #3da58a 100%);
+            color: #1a1a2e;
+            text-decoration: none;
+            border-radius: 50px;
+            margin: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(78, 204, 163, 0.6);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(135deg, #457b9d 0%, #1d3557 100%);
+            color: #e4e4e4;
+            box-shadow: 0 5px 15px rgba(69, 123, 157, 0.4);
+        }
+        
+        .section {
+            background: #1e2a3a;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            color: #4ecca3;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 2px solid #4ecca3;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #a8dadc;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        ol, ul {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background-color: #0f1923;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #4ecca3;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .code-block {
+            background-color: #0f1923;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #4ecca3;
+            overflow-x: auto;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background: #0f3460;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #4ecca3;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(78, 204, 163, 0.3);
+        }
+        
+        .feature-card h3 {
+            color: #4ecca3;
+            margin-top: 0;
+        }
+        
+        .warning {
+            background: #533a3a;
+            border-left: 4px solid #c74242;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .info {
+            background: #3a4553;
+            border-left: 4px solid #457b9d;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #a8dadc;
+            margin-top: 40px;
+        }
+        
+        a {
+            color: #4ecca3;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            background: #0f1923;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌀 Hurricane Client</h1>
+            <p class="subtitle">Enhanced Haven & Hearth Custom Client</p>
+            <p>Feature-rich modifications for an improved gaming experience</p>
+        </header>
+
+        <div class="download-section">
+            <h2 style="border: none; text-align: center; margin-bottom: 30px;">Get Started</h2>
+            <div style="text-align: center;">
+                <a href="launcher.jar" class="download-btn" download>⬇️ Download Launcher</a>
+                <a href="launcher.hl" class="download-btn secondary-btn" download>📄 Download Config</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Quick Start</h2>
+            <ol>
+                <li>Download both <code>launcher.jar</code> and <code>launcher.hl</code></li>
+                <li>Place them in the same folder</li>
+                <li>Run the launcher:
+                    <div class="code-block">
+                        <code>java -jar launcher.jar launcher.hl</code>
+                    </div>
+                </li>
+                <li>The launcher will automatically download and update all game files</li>
+                <li>Enjoy Hurricane!</li>
+            </ol>
+            
+            <div class="info">
+                <strong>💡 First Time Setup:</strong> On first launch, the launcher will download ~100MB of game files. This may take a few minutes depending on your connection speed.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✨ Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🤖 Automation</h3>
+                    <p>Advanced botting features including TurnipBot and various helper scripts</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🗺️ Enhanced Mapping</h3>
+                    <p>Custom map icons, presets, and improved navigation tools</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚔️ Combat Tools</h3>
+                    <p>Combat decks, quick switching, and enhanced combat UI</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔔 Alarm System</h3>
+                    <p>Customizable audio alerts for various in-game events</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎨 UI Improvements</h3>
+                    <p>Simplified UI, custom themes, and quality-of-life enhancements</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔗 Discord Integration</h3>
+                    <p>Connect your game with Discord for notifications and status updates</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 System Requirements</h2>
+            <ul>
+                <li><strong>Java:</strong> Java 8 or higher (Java 21 recommended)</li>
+                <li><strong>OS:</strong> Windows, Linux, or macOS</li>
+                <li><strong>Memory:</strong> 4GB RAM minimum (8GB recommended)</li>
+                <li><strong>Disk Space:</strong> ~200MB for game files</li>
+                <li><strong>Internet:</strong> Required for initial download and updates</li>
+            </ul>
+            
+            <h3>Check Your Java Version</h3>
+            <div class="code-block">
+                <code>java -version</code>
+            </div>
+            
+            <p>Don't have Java? Download it from <a href="https://www.oracle.com/java/technologies/downloads/" target="_blank">Oracle's website</a></p>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Alternative Launch Methods</h2>
+            
+            <h3>Windows (using launcher URL)</h3>
+            <div class="code-block">
+                <code>java -jar launcher.jar https://hafenexplorer.github.io/launcher.hl</code>
+            </div>
+            
+            <h3>Direct Launch (after files are downloaded)</h3>
+            <div class="code-block">
+                <code>java -jar launcher.jar hafen.hl</code>
+            </div>
+            
+            <h3>Using Play.bat (Windows)</h3>
+            <p>Download <a href="Play.bat">Play.bat</a> and double-click to launch</p>
+            
+            <h3>Using Play_Linux.sh (Linux/Mac)</h3>
+            <p>Download <a href="Play_Linux.sh">Play_Linux.sh</a>, make it executable, and run it:</p>
+            <div class="code-block">
+                <code>chmod +x Play_Linux.sh<br>
+                ./Play_Linux.sh</code>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📦 Available Files</h2>
+            <p>The following files are hosted and automatically managed by the launcher:</p>
+            
+            <h3>Core Files</h3>
+            <div class="file-list">
+                <div class="file-item"><a href="hafen.jar">hafen.jar</a></div>
+                <div class="file-item"><a href="builtin-res.jar">builtin-res.jar</a></div>
+                <div class="file-item"><a href="hafen-res.jar">hafen-res.jar</a></div>
+                <div class="file-item"><a href="sqlite-jdbc-3.42.0.0.jar">sqlite-jdbc</a></div>
+            </div>
+            
+            <h3>Configuration</h3>
+            <div class="file-list">
+                <div class="file-item"><a href="launcher.hl">launcher.hl</a></div>
+                <div class="file-item"><a href="hafen.hl">hafen.hl</a></div>
+            </div>
+            
+            <p style="margin-top: 20px;"><em>Additional libraries (JOGL, LWJGL, Steamworks) are automatically downloaded as needed.</em></p>
+        </div>
+
+        <div class="section">
+            <h2>❓ Troubleshooting</h2>
+            
+            <h3>Launcher won't start</h3>
+            <ul>
+                <li>Verify Java is installed: <code>java -version</code></li>
+                <li>Make sure both <code>launcher.jar</code> and <code>launcher.hl</code> are in the same folder</li>
+                <li>Try running with administrator privileges (Windows)</li>
+            </ul>
+            
+            <h3>Game crashes or errors</h3>
+            <ul>
+                <li>Clear the launcher cache (usually in <code>%LOCALAPPDATA%\Haven Launcher</code>)</li>
+                <li>Ensure you have sufficient memory allocated</li>
+                <li>Check that your graphics drivers are up to date</li>
+            </ul>
+            
+            <h3>Download fails</h3>
+            <ul>
+                <li>Check your internet connection</li>
+                <li>Verify GitHub Pages is not blocked by your firewall</li>
+                <li>Try again later (GitHub Pages may experience temporary issues)</li>
+            </ul>
+            
+            <div class="warning">
+                <strong>⚠️ Note:</strong> This is a custom client modification. It may not be compatible with official game servers. Use at your own risk.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔄 Updates</h2>
+            <p>The launcher automatically checks for updates each time you start it. When new versions are available, they will be downloaded automatically.</p>
+            
+            <p>To force a fresh download of all files, delete your launcher cache directory:</p>
+            <ul>
+                <li><strong>Windows:</strong> <code>%LOCALAPPDATA%\Haven Launcher</code></li>
+                <li><strong>Linux:</strong> <code>~/.cache/haven-launcher</code></li>
+                <li><strong>macOS:</strong> <code>~/Library/Caches/Haven Launcher</code></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📚 Additional Resources</h2>
+            <ul>
+                <li><a href="https://github.com/EnderWiggin/hafen-client" target="_blank">Source Code (GitHub)</a></li>
+                <li><a href="https://github.com/EnderWiggin/haven-launcher" target="_blank">Launcher Source (GitHub)</a></li>
+                <li><a href="https://www.havenandhearth.com" target="_blank">Official Haven & Hearth Website</a></li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>Hurricane Client - Custom Haven & Hearth Client</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                This is a community modification and is not affiliated with the official Haven & Hearth game.
+            </p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/hafenexplorer" target="_blank">GitHub</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
+

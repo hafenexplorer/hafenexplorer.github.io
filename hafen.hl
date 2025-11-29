@@ -2,8 +2,12 @@ require 1.0
 
 command-file Play.bat
 
+# Core game JARs (hosted on your deployment site)
 class-path hafen.jar
 class-path builtin-res.jar
+class-path hafen-res.jar
+
+# JOGL dependencies
 class-path gluegen-rt.jar
 class-path gluegen-rt-natives-linux-aarch64.jar
 class-path gluegen-rt-natives-linux-amd64.jar
@@ -12,7 +16,6 @@ class-path gluegen-rt-natives-linux-i586.jar
 class-path gluegen-rt-natives-macosx-universal.jar
 class-path gluegen-rt-natives-windows-amd64.jar
 class-path gluegen-rt-natives-windows-i586.jar
-class-path hafen-res.jar
 class-path jogl-all.jar
 class-path jogl-all-natives-linux-aarch64.jar
 class-path jogl-all-natives-linux-amd64.jar
@@ -21,10 +24,16 @@ class-path jogl-all-natives-linux-i586.jar
 class-path jogl-all-natives-macosx-universal.jar
 class-path jogl-all-natives-windows-amd64.jar
 class-path jogl-all-natives-windows-i586.jar
+
+# LWJGL dependencies
 class-path lwjgl-awt.jar
 class-path lwjgl-fat.jar
 class-path lwjgl-opengl-fat.jar
+
+# SQLite dependency
 class-path sqlite-jdbc-3.42.0.0.jar
+
+# Steamworks dependencies
 class-path steamworks4j.jar
 class-path steamworks4j-natives-linux-amd64.jar
 class-path steamworks4j-natives-macosx-universal.jar
@@ -33,12 +42,18 @@ class-path steamworks4j-natives-windows-i586.jar
 
 main-class haven.MainFrame
 
-validate tls-cert:key:rsa:99118FA7C13D9686021FFDB74F8FFE77CA5EB7D356A8D31BB907A31AFAE04D46
+# Certificate validation disabled for custom deployment
+# If you want to add validation later, generate your own certificate
+# validate tls-cert:key:rsa:YOUR_CERTIFICATE_HASH_HERE
 
-include https://game.havenandhearth.com/java/jogl/2.5.0/jogl.hl
-include https://game.havenandhearth.com/java/steamworks/current/steamworks.hl
+# Memory settings
+heap-size 2048
 
-include https://game.havenandhearth.com/java/hafen-props.hl
+# Properties
 property haven.errorurl stderr
-property haven.steamsvc https://www.havenandhearth.com/portal/steam/
-include https://game.havenandhearth.com/java/launcher-hacks.hl
+# Optional: property haven.steamsvc https://www.havenandhearth.com/portal/steam/
+
+# Optional includes for additional launcher configuration
+# include https://hafenexplorer.github.io/hafen-props.hl
+# include https://hafenexplorer.github.io/launcher-hacks.hl
+
