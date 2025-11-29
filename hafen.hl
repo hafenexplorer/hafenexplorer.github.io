@@ -59,7 +59,8 @@ property haven.errorurl stderr
 # Optional: property haven.steamsvc https://www.havenandhearth.com/portal/steam/
 
 # Optional includes for additional launcher configuration
-include https://hafenexplorer.github.io/hafen-props.hl
-include https://hafenexplorer.github.io/launcher-hacks.hl
+include https://game.havenandhearth.com/java/hafen-props.hl
+include https://game.havenandhearth.com/java/launcher-hacks.hl
+
 
 
