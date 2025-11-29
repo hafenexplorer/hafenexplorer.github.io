@@ -211,11 +211,21 @@
         <div class="download-section">
             <h2 style="border: none; text-align: center; margin-bottom: 30px;">Get Started</h2>
             <div style="text-align: center;">
-                <a href="Hurricane-AutoInstall-Debug.bat" class="download-btn" download>⬇️ Launcher (Windows)</a>
-                <a href="Hurricane-AutoInstall-Debug.bat" class="download-btn secondary-btn" download>🐧 Download Launcher (Linux/Mac)</a>
+                <!-- Standard Launchers -->
+                <a href="Hurricane-AutoInstall.bat" class="download-btn" download title="Standard Windows launcher - Simple and easy to use">⬇️ Launcher (Windows)</a>
+                <a href="Hurricane-AutoInstall.sh" class="download-btn secondary-btn" download title="Standard Linux/Mac launcher - Simple and easy to use">🐧 Launcher (Linux/Mac)</a>
             </div>
             <p style="text-align: center; margin-top: 20px; color: #a8dadc; font-size: 0.9em;">
-                Single file download - No additional setup required! Linux/Mac coming soon!
+                Single file download - No additional setup required!
+            </p>
+            <!-- Debug Versions -->
+            <div style="text-align: center; margin-top: 25px; padding-top: 25px; border-top: 1px solid #4ecca3;">
+                <p style="color: #a8dadc; font-size: 0.9em; margin-bottom: 15px;">Advanced versions with detailed error messages:</p>
+                <a href="Hurricane-AutoInstall-Debug.bat" class="download-btn secondary-btn" download style="font-size: 0.9em; padding: 10px 25px;" title="Windows debug launcher - Shows detailed error messages, Java version checking, and debugging information. Use if you encounter issues with the standard launcher.">🔧 Debug (Windows)</a>
+                <a href="Hurricane-AutoInstall-Debug.sh" class="download-btn secondary-btn" download style="font-size: 0.9em; padding: 10px 25px;" title="Linux/Mac debug launcher - Shows detailed error messages, Java version checking, and debugging information. Use if you encounter issues with the standard launcher.">🔧 Debug (Linux/Mac)</a>
+            </div>
+            <p style="text-align: center; margin-top: 10px; color: #a8dadc; font-size: 0.85em;">
+                Debug versions provide advanced error reporting and troubleshooting information
             </p>
         </div>
 
@@ -252,6 +262,14 @@
             <div class="info">
                 <strong>💡 First Time Setup:</strong> The auto-installer downloads the launcher on first run (takes ~5 seconds), then the game files (~100MB, takes a few minutes). Subsequent runs are instant!
             </div>
+            
+            <h3>Having Issues?</h3>
+            <p>If you encounter problems with the standard launcher, try the <strong>Debug versions</strong> instead:</p>
+            <ul>
+                <li><strong>Windows:</strong> Download <code>Hurricane-AutoInstall-Debug.bat</code> - Provides detailed error messages, Java version checking, and troubleshooting information</li>
+                <li><strong>Linux/Mac:</strong> Download <code>Hurricane-AutoInstall-Debug.sh</code> - Same advanced features for Unix systems</li>
+            </ul>
+            <p style="font-size: 0.9em; color: #a8dadc;">The debug versions keep the terminal window open so you can see all error messages and diagnostic information.</p>
         </div>
 
         <div class="section">
