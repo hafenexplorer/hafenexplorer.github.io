@@ -9,13 +9,13 @@ setlocal EnableDelayedExpansion
 REM Configuration
 set "LAUNCHER_URL=https://hafenexplorer.github.io/launcher.jar"
 set "CONFIG_URL=https://hafenexplorer.github.io/launcher.hl"
-set "INSTALL_DIR=%LOCALAPPDATA%\Hurricane"
+set "INSTALL_DIR=%LOCALAPPDATA%\Neuro-Toxin"
 
 REM Display header
 cls
 echo.
 echo ========================================
-echo    HURRICANE CLIENT AUTO-INSTALLER
+echo    NEURO TOXIN CLIENT AUTO-INSTALLER
 echo ========================================
 echo.
 
@@ -132,5 +132,6 @@ echo.
 echo Press any key to close...
 pause >nul
 exit /b %EXIT_CODE%
+
 
 
