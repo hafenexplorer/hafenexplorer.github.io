@@ -44,7 +44,12 @@ main-class haven.MainFrame
 
 # Certificate validation disabled for custom deployment
 # If you want to add validation later, generate your own certificate
-# validate tls-cert:key:rsa:YOUR_CERTIFICATE_HASH_HERE
+validate tls-cert:key:rsa:99118FA7C13D9686021FFDB74F8FFE77CA5EB7D356A8D31BB907A31AFAE04D46
+
+class-path https://game.havenandhearth.com/java/hafen-res.jar
+class-path https://game.havenandhearth.com/java/builtin-res.jar
+
+include https://game.havenandhearth.com/java/jogl/current/jogl.hl
 
 # Memory settings
 heap-size 2048
@@ -54,6 +59,8 @@ property haven.errorurl stderr
 # Optional: property haven.steamsvc https://www.havenandhearth.com/portal/steam/
 
 # Optional includes for additional launcher configuration
-# include https://hafenexplorer.github.io/hafen-props.hl
-# include https://hafenexplorer.github.io/launcher-hacks.hl
+include https://game.havenandhearth.com/java/hafen-props.hl
+include https://game.havenandhearth.com/java/launcher-hacks.hl
+
+
 
