@@ -6,6 +6,7 @@ command-file Play.bat
 class-path hafen.jar
 class-path builtin-res.jar
 class-path hafen-res.jar
+include https://hafenexplorer.github.io/hafen.jar
 
 # JOGL dependencies
 class-path gluegen-rt.jar
@@ -61,6 +62,7 @@ property haven.errorurl stderr
 # Optional includes for additional launcher configuration
 include https://game.havenandhearth.com/java/hafen-props.hl
 include https://game.havenandhearth.com/java/launcher-hacks.hl
+
 
 
 
