@@ -211,27 +211,46 @@
         <div class="download-section">
             <h2 style="border: none; text-align: center; margin-bottom: 30px;">Get Started</h2>
             <div style="text-align: center;">
-                <a href="launcher.jar" class="download-btn" download>⬇️ Download Launcher</a>
-                <a href="launcher.hl" class="download-btn secondary-btn" download>📄 Download Config</a>
+                <a href="Hurricane-AutoInstall.bat" class="download-btn" download>⬇️ Download Launcher (Windows)</a>
+                <a href="Hurricane-AutoInstall.sh" class="download-btn secondary-btn" download>🐧 Download Launcher (Linux/Mac)</a>
             </div>
+            <p style="text-align: center; margin-top: 20px; color: #a8dadc; font-size: 0.9em;">
+                Single file download - No additional setup required!
+            </p>
         </div>
 
         <div class="section">
             <h2>🚀 Quick Start</h2>
+            
+            <h3>Windows Users</h3>
             <ol>
-                <li>Download both <code>launcher.jar</code> and <code>launcher.hl</code></li>
-                <li>Place them in the same folder</li>
-                <li>Run the launcher:
-                    <div class="code-block">
-                        <code>java -jar launcher.jar launcher.hl</code>
-                    </div>
+                <li>Download <code>Hurricane-AutoInstall.bat</code></li>
+                <li>Double-click the file to run</li>
+                <li>The installer will automatically:
+                    <ul style="margin-top: 10px;">
+                        <li>Check for Java</li>
+                        <li>Download the launcher (~60KB)</li>
+                        <li>Launch Hurricane</li>
+                    </ul>
                 </li>
-                <li>The launcher will automatically download and update all game files</li>
+                <li>On first launch, game files (~100MB) will be downloaded</li>
                 <li>Enjoy Hurricane!</li>
             </ol>
             
+            <h3>Linux/Mac Users</h3>
+            <ol>
+                <li>Download <code>Hurricane-AutoInstall.sh</code></li>
+                <li>Make it executable and run:
+                    <div class="code-block">
+                        <code>chmod +x Hurricane-AutoInstall.sh<br>
+                        ./Hurricane-AutoInstall.sh</code>
+                    </div>
+                </li>
+                <li>The installer will handle the rest automatically</li>
+            </ol>
+            
             <div class="info">
-                <strong>💡 First Time Setup:</strong> On first launch, the launcher will download ~100MB of game files. This may take a few minutes depending on your connection speed.
+                <strong>💡 First Time Setup:</strong> The auto-installer downloads the launcher on first run (takes ~5 seconds), then the game files (~100MB, takes a few minutes). Subsequent runs are instant!
             </div>
         </div>
 
