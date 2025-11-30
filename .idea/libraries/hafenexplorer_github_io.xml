@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="hafenexplorer.github.io">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/builtin-res.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lwjgl-awt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-windows-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lwjgl-opengl-fat.jar!/" />
+      <root url="jar://$PROJECT_DIR$/steamworks4j.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-linux-armv6hf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/sqlite-jdbc-3.42.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/steamworks4j-natives-windows-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-linux-armv6hf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-macosx-universal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-linux-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-linux-aarch64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-windows-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/launcher.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/hafen-res.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-linux-aarch64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-macosx-universal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-windows-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-windows-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/steamworks4j-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/steamworks4j-natives-macosx-universal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/steamworks4j-natives-windows-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jogl-all-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lwjgl-fat.jar!/" />
+      <root url="jar://$PROJECT_DIR$/gluegen-rt-natives-linux-i586.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
