@@ -10,6 +10,7 @@ REM Configuration
 set "LAUNCHER_URL=https://hafenexplorer.github.io/launcher.jar"
 set "CONFIG_URL=https://hafenexplorer.github.io/launcher.hl"
 set "HAFEN_JAR_URL=https://hafenexplorer.github.io/hafen.jar"
+set "BASE_URL=https://hafenexplorer.github.io"
 set "INSTALL_DIR=%LOCALAPPDATA%\Neuro-Toxin"
 set "CACHE_DIR=%INSTALL_DIR%\cache\https\hafenexplorer.github.io"
 
@@ -62,51 +63,91 @@ if not errorlevel 1 (
 echo Version OK
 echo.
 
-REM Create directory (clean if exists)
-echo [3/6] Setting up directory...
-if exist "%INSTALL_DIR%" (
-    echo Directory exists - cleaning old files...
-    REM Remove old launcher.jar if it exists
-    if exist "%INSTALL_DIR%\launcher.jar" (
-        del "%INSTALL_DIR%\launcher.jar" 2>nul
-        echo Removed old launcher.jar
-    )
-    REM Remove any other old files (optional - uncomment if you want to clean everything)
-    REM del "%INSTALL_DIR%\*.*" /Q 2>nul
-) else (
+REM Create directory
+echo [3/7] Setting up directory...
+if not exist "%INSTALL_DIR%" (
     mkdir "%INSTALL_DIR%"
     echo Created: %INSTALL_DIR%
+) else (
+    echo Directory exists: %INSTALL_DIR%
 )
 
 cd /d "%INSTALL_DIR%"
 echo.
 
-REM Download launcher (always overwrite)
-echo [4/6] Downloading/Updating launcher...
-if exist "launcher.jar" (
-    echo Existing launcher.jar found - will be replaced
-    del "launcher.jar" 2>nul
-)
-echo Downloading launcher.jar...
-echo Please wait...
-echo.
+REM Check and update launcher.jar
+echo [4/7] Checking launcher.jar...
+set "LAUNCHER_NEEDS_UPDATE=0"
+set "LAUNCHER_PATH=%INSTALL_DIR%\launcher.jar"
 
-powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('%LAUNCHER_URL%', 'launcher.jar'); Write-Host 'Download complete'; exit 0 } catch { Write-Host 'Error:' $_.Exception.Message; exit 1 }"
-
-if errorlevel 1 (
-    echo.
-    echo ERROR: Download failed
-    echo Check internet connection
-    echo.
-    echo Press any key to exit...
-    pause >nul
-    exit /b 1
+if exist "!LAUNCHER_PATH!" (
+    echo Existing launcher.jar found
+    echo Checking if local launcher.jar matches repository version...
+    
+    REM Get local file size
+    for %%A in ("!LAUNCHER_PATH!") do set LOCAL_LAUNCHER_SIZE=%%~zA
+    echo Local file size: !LOCAL_LAUNCHER_SIZE! bytes
+    
+    REM Get remote file size using PowerShell
+    echo Checking repository version...
+    powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $request = [System.Net.WebRequest]::Create('%LAUNCHER_URL%'); $request.Method = 'HEAD'; $request.Timeout = 10000; $response = $request.GetResponse(); $remoteSize = $response.ContentLength; $response.Close(); Write-Host $remoteSize; exit 0 } catch { Write-Host 'ERROR'; exit 1 }" > "%TEMP%\remote_launcher_size.txt"
+    
+    set /p REMOTE_LAUNCHER_SIZE=<"%TEMP%\remote_launcher_size.txt"
+    del "%TEMP%\remote_launcher_size.txt" 2>nul
+    
+    if "!REMOTE_LAUNCHER_SIZE!"=="ERROR" (
+        echo WARNING: Could not check repository version
+        echo          (Network error or file not accessible)
+        echo.
+        echo Will attempt to download anyway to ensure latest version...
+        set "LAUNCHER_NEEDS_UPDATE=1"
+    ) else (
+        echo Repository file size: !REMOTE_LAUNCHER_SIZE! bytes
+        echo.
+        
+        if "!LOCAL_LAUNCHER_SIZE!"=="!REMOTE_LAUNCHER_SIZE!" (
+            echo [OK] Local launcher.jar matches repository size
+            echo       File appears to be up-to-date
+            set "LAUNCHER_NEEDS_UPDATE=0"
+        ) else (
+            echo [UPDATE NEEDED] Local launcher.jar size differs from repository!
+            echo                  Local:  !LOCAL_LAUNCHER_SIZE! bytes
+            echo                  Remote: !REMOTE_LAUNCHER_SIZE! bytes
+            echo.
+            set "LAUNCHER_NEEDS_UPDATE=1"
+        )
+    )
+) else (
+    echo launcher.jar not found - will download
+    set "LAUNCHER_NEEDS_UPDATE=1"
 )
-echo Downloaded successfully (overwritten if existed)
+
+REM Download launcher.jar if update is needed
+if !LAUNCHER_NEEDS_UPDATE!==1 (
+    echo.
+    echo Downloading launcher.jar from repository...
+    echo Please wait...
+    echo.
+    
+    powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('%LAUNCHER_URL%', '!LAUNCHER_PATH!'); Write-Host 'SUCCESS'; exit 0 } catch { Write-Host 'ERROR:' $_.Exception.Message; exit 1 }"
+    
+    if errorlevel 1 (
+        echo.
+        echo ERROR: Failed to download launcher.jar
+        echo Check internet connection
+        echo.
+        echo Press any key to exit...
+        pause >nul
+        exit /b 1
+    ) else (
+        echo.
+        echo [SUCCESS] launcher.jar downloaded/updated successfully!
+    )
+)
 echo.
 
 REM Check and update hafen.jar in cache
-echo [5/6] Checking hafen.jar cache...
+echo [5/7] Checking hafen.jar cache...
 set "HAFEN_JAR_FOUND=0"
 set "HAFEN_JAR_PATH="
 set "NEEDS_UPDATE=0"
@@ -194,16 +235,61 @@ if %HAFEN_JAR_FOUND%==1 (
     echo.
 )
 
-REM Copy res folder if needed
-REM if exist "res" (
-REM    echo Found local res folder
-REM ) else (
-REM     echo.
-REM )
+REM Download AlarmSounds, MapIconsPresets, and midiFiles if they don't exist
+echo [6/7] Checking resource directories...
+echo.
+
+REM Check and download AlarmSounds
+set "ALARM_DIR=%INSTALL_DIR%\AlarmSounds"
+if exist "!ALARM_DIR!" (
+    echo [OK] AlarmSounds directory exists
+) else (
+    echo [DOWNLOAD] AlarmSounds directory not found - downloading...
+    mkdir "!ALARM_DIR!" 2>nul
+    mkdir "!ALARM_DIR!\settings" 2>nul
+    
+    echo Downloading AlarmSounds files...
+    powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $baseUrl = '%BASE_URL%/AlarmSounds/'; $installDir = '%INSTALL_DIR%'; $files = @('ND_Ambush.wav', 'ND_Badger.wav', 'ND_Barnacles.wav', 'ND_Bear.wav', 'ND_Bear2.wav', 'ND_Boar.wav', 'ND_Boar2.wav', 'ND_Cachalot.wav', 'ND_CaveAngler.wav', 'ND_Cleave.wav', 'ND_Eagle.wav', 'ND_EagleOwl.wav', 'ND_EnemySighted.wav', 'ND_EnemySpotted.wav', 'ND_EngagedTheEnemy.wav', 'ND_EngagingFoe.wav', 'ND_FlyingTheFriendlySkies.wav', 'ND_GreySeal.wav', 'ND_HelloFriend.wav', 'ND_HeyWatchout.wav', 'ND_HitAndRun.wav', 'ND_HorseEnergy.wav', 'ND_Lynx.wav', 'ND_Mammoth.wav', 'ND_MarioCoin.wav', 'ND_Moose.wav', 'ND_Nidbane.wav', 'ND_NotEnoughEnergy.wav', 'ND_Opk.wav', 'ND_Orca.wav', 'ND_PriorityTarget.wav', 'ND_PriorityTargetHere.wav', 'ND_Snake.wav', 'ND_Troll.wav', 'ND_Walrus.wav', 'ND_Wolf.wav', 'ND_Wolverine.wav', 'ND_YoHeadsUp.wav'); $client = New-Object System.Net.WebClient; $success = 0; foreach ($file in $files) { try { $url = $baseUrl + $file; $dest = Join-Path $installDir \"AlarmSounds\\$file\"; $client.DownloadFile($url, $dest); $success++ } catch { } }; Write-Host \"Downloaded $success files\"; exit 0"
+    
+    REM Download settings file
+    powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/AlarmSounds/settings/defaultAlarms'; $dest = Join-Path '%INSTALL_DIR%' 'AlarmSounds\settings\defaultAlarms'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Downloaded: settings/defaultAlarms' } catch { Write-Host 'Warning: Could not download defaultAlarms' }"
+    
+    echo [OK] AlarmSounds directory created
+)
+echo.
+
+REM Check and download MapIconsPresets
+set "MAPICONS_DIR=%INSTALL_DIR%\MapIconsPresets"
+if exist "!MAPICONS_DIR!" (
+    echo [OK] MapIconsPresets directory exists
+) else (
+    echo [DOWNLOAD] MapIconsPresets directory not found - downloading...
+    mkdir "!MAPICONS_DIR!" 2>nul
+    
+    echo Downloading MapIconsPresets files...
+    powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/MapIconsPresets/defaultPresets'; $dest = Join-Path '%INSTALL_DIR%' 'MapIconsPresets\defaultPresets'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Downloaded: defaultPresets'; exit 0 } catch { Write-Host 'Warning: Could not download defaultPresets'; exit 1 }"
+    
+    echo [OK] MapIconsPresets directory created
+)
+echo.
+
+REM Check and download midiFiles
+set "MIDI_DIR=%INSTALL_DIR%\midiFiles"
+if exist "!MIDI_DIR!" (
+    echo [OK] midiFiles directory exists
+) else (
+    echo [DOWNLOAD] midiFiles directory not found - downloading...
+    mkdir "!MIDI_DIR!" 2>nul
+    
+    echo Downloading midiFiles...
+    powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/midiFiles/example.mid'; $dest = Join-Path '%INSTALL_DIR%' 'midiFiles\example.mid'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Downloaded: example.mid'; exit 0 } catch { Write-Host 'Warning: Could not download example.mid'; exit 1 }"
+    
+    echo [OK] midiFiles directory created
+)
 echo.
 
 REM Launch
-echo [6/6] Starting Neuro Toxin...
+echo [7/7] Starting Neuro Toxin...
 echo.
 echo Launching game...
 echo Window will stay open for debugging
