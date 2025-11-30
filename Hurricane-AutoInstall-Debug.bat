@@ -195,11 +195,11 @@ if %HAFEN_JAR_FOUND%==1 (
 )
 
 REM Copy res folder if needed
-if exist "res" (
-    echo Found local res folder
-) else (
-    echo.
-)
+REM if exist "res" (
+REM    echo Found local res folder
+REM ) else (
+REM     echo.
+REM )
 echo.
 
 REM Launch
