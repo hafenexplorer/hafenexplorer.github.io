@@ -23,7 +23,7 @@ echo ========================================
 echo.
 
 REM Check Java
-echo [1/6] Checking Java...
+echo [1/7] Checking Java...
 Java -version 2>&1 | findstr /i "version"
 if errorlevel 1 (
     echo.
@@ -38,7 +38,7 @@ echo Java found!
 echo.
 
 REM Check Java version
-echo [2/6] Checking Java version...
+echo [2/7] Checking Java version...
 for /f "tokens=3" %%v in ('Java -version 2^>^&1 ^| findstr /i "version"') do (
     set JAVA_VERSION=%%v
     goto :got_version
