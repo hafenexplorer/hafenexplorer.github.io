@@ -25,6 +25,7 @@ class-path jogl-all-natives-linux-i586.jar
 class-path jogl-all-natives-macosx-universal.jar
 class-path jogl-all-natives-windows-amd64.jar
 class-path jogl-all-natives-windows-i586.jar
+gson-2.8.6.jar
 
 # LWJGL dependencies
 class-path lwjgl-awt.jar
@@ -62,6 +63,7 @@ property haven.errorurl stderr
 # Optional includes for additional launcher configuration
 include https://game.havenandhearth.com/java/hafen-props.hl
 include https://game.havenandhearth.com/java/launcher-hacks.hl
+
 
 
 
