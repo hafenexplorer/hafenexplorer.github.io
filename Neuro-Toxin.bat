@@ -243,6 +243,71 @@ REM Check and download AlarmSounds
 set "ALARM_DIR=%INSTALL_DIR%\AlarmSounds"
 if exist "!ALARM_DIR!" (
     echo [OK] AlarmSounds directory exists
+    echo Checking if AlarmSounds files match repository...
+    
+    REM List of AlarmSounds files to verify
+    set "ALARM_FILES=ND_Ambush.wav ND_Badger.wav ND_Barnacles.wav ND_Bear.wav ND_Bear2.wav ND_Boar.wav ND_Boar2.wav ND_Cachalot.wav ND_CaveAngler.wav ND_Cleave.wav ND_Eagle.wav ND_EagleOwl.wav ND_EnemySighted.wav ND_EnemySpotted.wav ND_EngagedTheEnemy.wav ND_EngagingFoe.wav ND_FlyingTheFriendlySkies.wav ND_GreySeal.wav ND_HelloFriend.wav ND_HeyWatchout.wav ND_HitAndRun.wav ND_HorseEnergy.wav ND_Lynx.wav ND_Mammoth.wav ND_MarioCoin.wav ND_Moose.wav ND_Nidbane.wav ND_NotEnoughEnergy.wav ND_Opk.wav ND_Orca.wav ND_PriorityTarget.wav ND_PriorityTargetHere.wav ND_Snake.wav ND_Troll.wav ND_Walrus.wav ND_Wolf.wav ND_Wolverine.wav ND_YoHeadsUp.wav"
+    
+    set "ALARM_MISSING=0"
+    set "ALARM_OUTDATED=0"
+    
+    for %%F in (!ALARM_FILES!) do (
+        set "LOCAL_FILE=!ALARM_DIR!\%%F"
+        if exist "!LOCAL_FILE!" (
+            REM Get local file size
+            for %%A in ("!LOCAL_FILE!") do set LOCAL_SIZE=%%~zA
+            
+            REM Get remote file size
+            powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $request = [System.Net.WebRequest]::Create('%BASE_URL%/AlarmSounds/%%F'); $request.Method = 'HEAD'; $request.Timeout = 10000; $response = $request.GetResponse(); $remoteSize = $response.ContentLength; $response.Close(); Write-Host $remoteSize; exit 0 } catch { Write-Host 'ERROR'; exit 1 }" > "%TEMP%\remote_alarm_size.txt"
+            
+            set /p REMOTE_SIZE=<"%TEMP%\remote_alarm_size.txt"
+            del "%TEMP%\remote_alarm_size.txt" 2>nul
+            
+            if not "!REMOTE_SIZE!"=="ERROR" (
+                if not "!LOCAL_SIZE!"=="!REMOTE_SIZE!" (
+                    echo [UPDATE] %%F size mismatch - Local: !LOCAL_SIZE! Remote: !REMOTE_SIZE!
+                    set "ALARM_OUTDATED=1"
+                )
+            )
+        ) else (
+            echo [MISSING] %%F not found
+            set "ALARM_MISSING=1"
+        )
+    )
+    
+    REM Check settings/defaultAlarms
+    set "SETTINGS_FILE=!ALARM_DIR!\settings\defaultAlarms"
+    if exist "!SETTINGS_FILE!" (
+        for %%A in ("!SETTINGS_FILE!") do set LOCAL_SIZE=%%~zA
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $request = [System.Net.WebRequest]::Create('%BASE_URL%/AlarmSounds/settings/defaultAlarms'); $request.Method = 'HEAD'; $request.Timeout = 10000; $response = $request.GetResponse(); $remoteSize = $response.ContentLength; $response.Close(); Write-Host $remoteSize; exit 0 } catch { Write-Host 'ERROR'; exit 1 }" > "%TEMP%\remote_settings_size.txt"
+        set /p REMOTE_SIZE=<"%TEMP%\remote_settings_size.txt"
+        del "%TEMP%\remote_settings_size.txt" 2>nul
+        if not "!REMOTE_SIZE!"=="ERROR" (
+            if not "!LOCAL_SIZE!"=="!REMOTE_SIZE!" (
+                echo [UPDATE] settings/defaultAlarms size mismatch
+                set "ALARM_OUTDATED=1"
+            )
+        )
+    ) else (
+        echo [MISSING] settings/defaultAlarms not found
+        set "ALARM_MISSING=1"
+    )
+    
+    if !ALARM_MISSING!==1 (
+        echo.
+        echo [DOWNLOAD] Missing AlarmSounds files detected - downloading...
+        REM Download missing/outdated files (reuse existing download logic)
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $baseUrl = '%BASE_URL%/AlarmSounds/'; $installDir = '%INSTALL_DIR%'; $files = @('ND_Ambush.wav', 'ND_Badger.wav', 'ND_Barnacles.wav', 'ND_Bear.wav', 'ND_Bear2.wav', 'ND_Boar.wav', 'ND_Boar2.wav', 'ND_Cachalot.wav', 'ND_CaveAngler.wav', 'ND_Cleave.wav', 'ND_Eagle.wav', 'ND_EagleOwl.wav', 'ND_EnemySighted.wav', 'ND_EnemySpotted.wav', 'ND_EngagedTheEnemy.wav', 'ND_EngagingFoe.wav', 'ND_FlyingTheFriendlySkies.wav', 'ND_GreySeal.wav', 'ND_HelloFriend.wav', 'ND_HeyWatchout.wav', 'ND_HitAndRun.wav', 'ND_HorseEnergy.wav', 'ND_Lynx.wav', 'ND_Mammoth.wav', 'ND_MarioCoin.wav', 'ND_Moose.wav', 'ND_Nidbane.wav', 'ND_NotEnoughEnergy.wav', 'ND_Opk.wav', 'ND_Orca.wav', 'ND_PriorityTarget.wav', 'ND_PriorityTargetHere.wav', 'ND_Snake.wav', 'ND_Troll.wav', 'ND_Walrus.wav', 'ND_Wolf.wav', 'ND_Wolverine.wav', 'ND_YoHeadsUp.wav'); $client = New-Object System.Net.WebClient; $success = 0; foreach ($file in $files) { try { $url = $baseUrl + $file; $dest = Join-Path $installDir \"AlarmSounds\\$file\"; $client.DownloadFile($url, $dest); $success++ } catch { } }; Write-Host \"Downloaded $success files\"; exit 0"
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/AlarmSounds/settings/defaultAlarms'; $dest = Join-Path '%INSTALL_DIR%' 'AlarmSounds\settings\defaultAlarms'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Downloaded: settings/defaultAlarms' } catch { Write-Host 'Warning: Could not download defaultAlarms' }"
+    ) else if !ALARM_OUTDATED!==1 (
+        echo.
+        echo [UPDATE] Outdated AlarmSounds files detected - updating...
+        REM Download updated files
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $baseUrl = '%BASE_URL%/AlarmSounds/'; $installDir = '%INSTALL_DIR%'; $files = @('ND_Ambush.wav', 'ND_Badger.wav', 'ND_Barnacles.wav', 'ND_Bear.wav', 'ND_Bear2.wav', 'ND_Boar.wav', 'ND_Boar2.wav', 'ND_Cachalot.wav', 'ND_CaveAngler.wav', 'ND_Cleave.wav', 'ND_Eagle.wav', 'ND_EagleOwl.wav', 'ND_EnemySighted.wav', 'ND_EnemySpotted.wav', 'ND_EngagedTheEnemy.wav', 'ND_EngagingFoe.wav', 'ND_FlyingTheFriendlySkies.wav', 'ND_GreySeal.wav', 'ND_HelloFriend.wav', 'ND_HeyWatchout.wav', 'ND_HitAndRun.wav', 'ND_HorseEnergy.wav', 'ND_Lynx.wav', 'ND_Mammoth.wav', 'ND_MarioCoin.wav', 'ND_Moose.wav', 'ND_Nidbane.wav', 'ND_NotEnoughEnergy.wav', 'ND_Opk.wav', 'ND_Orca.wav', 'ND_PriorityTarget.wav', 'ND_PriorityTargetHere.wav', 'ND_Snake.wav', 'ND_Troll.wav', 'ND_Walrus.wav', 'ND_Wolf.wav', 'ND_Wolverine.wav', 'ND_YoHeadsUp.wav'); $client = New-Object System.Net.WebClient; $success = 0; foreach ($file in $files) { try { $url = $baseUrl + $file; $dest = Join-Path $installDir \"AlarmSounds\\$file\"; $client.DownloadFile($url, $dest); $success++ } catch { } }; Write-Host \"Updated $success files\"; exit 0"
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/AlarmSounds/settings/defaultAlarms'; $dest = Join-Path '%INSTALL_DIR%' 'AlarmSounds\settings\defaultAlarms'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Updated: settings/defaultAlarms' } catch { Write-Host 'Warning: Could not update defaultAlarms' }"
+    ) else (
+        echo [OK] All AlarmSounds files match repository
+    )
 ) else (
     echo [DOWNLOAD] AlarmSounds directory not found - downloading...
     mkdir "!ALARM_DIR!" 2>nul
@@ -262,6 +327,28 @@ REM Check and download MapIconsPresets
 set "MAPICONS_DIR=%INSTALL_DIR%\MapIconsPresets"
 if exist "!MAPICONS_DIR!" (
     echo [OK] MapIconsPresets directory exists
+    echo Checking if MapIconsPresets file matches repository...
+    
+    set "PRESETS_FILE=!MAPICONS_DIR!\defaultPresets"
+    if exist "!PRESETS_FILE!" (
+        for %%A in ("!PRESETS_FILE!") do set LOCAL_SIZE=%%~zA
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $request = [System.Net.WebRequest]::Create('%BASE_URL%/MapIconsPresets/defaultPresets'); $request.Method = 'HEAD'; $request.Timeout = 10000; $response = $request.GetResponse(); $remoteSize = $response.ContentLength; $response.Close(); Write-Host $remoteSize; exit 0 } catch { Write-Host 'ERROR'; exit 1 }" > "%TEMP%\remote_presets_size.txt"
+        set /p REMOTE_SIZE=<"%TEMP%\remote_presets_size.txt"
+        del "%TEMP%\remote_presets_size.txt" 2>nul
+        
+        if "!REMOTE_SIZE!"=="ERROR" (
+            echo WARNING: Could not check repository version
+        ) else if not "!LOCAL_SIZE!"=="!REMOTE_SIZE!" (
+            echo [UPDATE] defaultPresets size mismatch - Local: !LOCAL_SIZE! Remote: !REMOTE_SIZE!
+            echo Downloading updated defaultPresets...
+            powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/MapIconsPresets/defaultPresets'; $dest = Join-Path '%INSTALL_DIR%' 'MapIconsPresets\defaultPresets'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Updated: defaultPresets'; exit 0 } catch { Write-Host 'Warning: Could not update defaultPresets'; exit 1 }"
+        ) else (
+            echo [OK] defaultPresets matches repository
+        )
+    ) else (
+        echo [MISSING] defaultPresets not found - downloading...
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/MapIconsPresets/defaultPresets'; $dest = Join-Path '%INSTALL_DIR%' 'MapIconsPresets\defaultPresets'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Downloaded: defaultPresets'; exit 0 } catch { Write-Host 'Warning: Could not download defaultPresets'; exit 1 }"
+    )
 ) else (
     echo [DOWNLOAD] MapIconsPresets directory not found - downloading...
     mkdir "!MAPICONS_DIR!" 2>nul
@@ -277,6 +364,28 @@ REM Check and download midiFiles
 set "MIDI_DIR=%INSTALL_DIR%\midiFiles"
 if exist "!MIDI_DIR!" (
     echo [OK] midiFiles directory exists
+    echo Checking if midiFiles file matches repository...
+    
+    set "MIDI_FILE=!MIDI_DIR!\example.mid"
+    if exist "!MIDI_FILE!" (
+        for %%A in ("!MIDI_FILE!") do set LOCAL_SIZE=%%~zA
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $request = [System.Net.WebRequest]::Create('%BASE_URL%/midiFiles/example.mid'); $request.Method = 'HEAD'; $request.Timeout = 10000; $response = $request.GetResponse(); $remoteSize = $response.ContentLength; $response.Close(); Write-Host $remoteSize; exit 0 } catch { Write-Host 'ERROR'; exit 1 }" > "%TEMP%\remote_midi_size.txt"
+        set /p REMOTE_SIZE=<"%TEMP%\remote_midi_size.txt"
+        del "%TEMP%\remote_midi_size.txt" 2>nul
+        
+        if "!REMOTE_SIZE!"=="ERROR" (
+            echo WARNING: Could not check repository version
+        ) else if not "!LOCAL_SIZE!"=="!REMOTE_SIZE!" (
+            echo [UPDATE] example.mid size mismatch - Local: !LOCAL_SIZE! Remote: !REMOTE_SIZE!
+            echo Downloading updated example.mid...
+            powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/midiFiles/example.mid'; $dest = Join-Path '%INSTALL_DIR%' 'midiFiles\example.mid'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Updated: example.mid'; exit 0 } catch { Write-Host 'Warning: Could not update example.mid'; exit 1 }"
+        ) else (
+            echo [OK] example.mid matches repository
+        )
+    ) else (
+        echo [MISSING] example.mid not found - downloading...
+        powershell -Command "$ProgressPreference = 'SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; try { $url = '%BASE_URL%/midiFiles/example.mid'; $dest = Join-Path '%INSTALL_DIR%' 'midiFiles\example.mid'; (New-Object System.Net.WebClient).DownloadFile($url, $dest); Write-Host 'Downloaded: example.mid'; exit 0 } catch { Write-Host 'Warning: Could not download example.mid'; exit 1 }"
+    )
 ) else (
     echo [DOWNLOAD] midiFiles directory not found - downloading...
     mkdir "!MIDI_DIR!" 2>nul
