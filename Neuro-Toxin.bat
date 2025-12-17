@@ -397,6 +397,17 @@ if exist "!MIDI_DIR!" (
 )
 echo.
 
+REM Create data directory
+echo Creating data directory...
+set "DATA_DIR=%CACHE_DIR%\data"
+if not exist "!DATA_DIR!" (
+    mkdir "!DATA_DIR!" 2>nul
+    echo [OK] data directory created
+) else (
+    echo [OK] data directory already exists
+)
+echo.
+
 REM Launch
 echo [7/7] Starting Neuro Toxin...
 echo.
